@@ -33,3 +33,9 @@
   flex-wrap: wrap;
   justify-content: space-around;
 }
+
+.nothing-found {
+  color: gray;
+  text-align: center;
+  font-size: 20px;
+}

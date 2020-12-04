@@ -9,6 +9,7 @@ const App = () => {
   const [recipes, setRecipes] = useState([]);
   const [search, setSearch] = useState([]);
   const [query, setQuery] = useState('chicken');
+  const [haveFetched, setHaveFetched] = useState(false);
 
   useEffect(() => {
     getRecipes();
@@ -20,6 +21,7 @@ const App = () => {
     );
     const data = await response.json();
     setRecipes(data.hits);
+    setHaveFetched(true);
   };
 
   const updateSearch = e => {
@@ -30,6 +32,18 @@ const App = () => {
     e.preventDefault();
     setQuery(search);
     setSearch('');
+  };
+
+  const DisplayRecipes = (props) => {
+    if (recipes.length === 0 && haveFetched === true) {
+      return (
+        <p className="nothing-found">
+          Sorry, nothing was found. 
+          Try searching for something else.
+        </p>
+      )
+    }
+    return props.children;
   };
 
   return (
@@ -43,17 +57,19 @@ const App = () => {
         />
         <button className="search-button" type="submit">Search</button>
       </form>
-      <div className="recipes">
-        {recipes.map((recipe, i) => (
-            <Recipe
-              key={Date.now() + i}
-              title={recipe.recipe.label}
-              calories={recipe.recipe.calories}
-              image={recipe.recipe.image}
-              ingredients={recipe.recipe.ingredients}
-          />
-        ))}
-      </div>
+      <DisplayRecipes>
+        <div className="recipes">
+          {recipes.map((recipe, i) => (
+              <Recipe
+                key={Date.now() + i}
+                title={recipe.recipe.label}
+                calories={recipe.recipe.calories}
+                image={recipe.recipe.image}
+                ingredients={recipe.recipe.ingredients}
+            />
+          ))}
+        </div>
+      </DisplayRecipes>  
     </div>
   );
 };
